@@ -1,0 +1,37 @@
+import { config as loadEnv } from "dotenv";
+import { SDK, Auth, TEMPLATES } from "@infura/sdk";
+
+loadEnv();
+
+/*networks guide:
+ropsten=3
+rinkeny=4
+goerly=5
+*/
+
+const auth = new Auth({
+  projectId: process.env.INFURA_PROJECT_ID,
+  secretId: process.env.INFURA_PROJECT_SECRET,
+  privateKey: process.env.WALLET_PRIVATE_KEY,
+  chainId: 5,
+});
+
+const sdk = new SDK(auth);
+
+const newContract = await sdk.deploy({
+  template: TEMPLATES.ERC721Mintable,
+  params: {
+    name: "NFT contract",
+    symbol: "CNSYS",
+    contractURI:
+      "https://bafybeiesrdovwqtcueo2cflwtgkurjkvvvnufwwp2dlnnbsxmnwezdrali.ipfs.infura-ipfs.io/",
+  },
+});
+
+console.log(`Contract address is: ${newContract.contractAddress}`);
+
+//const myNFTs = await sdk.getNFTs({
+//  publicAddress: process.env.WALLET_PUBLIC_ADDRESS,
+//  includeMetadata: true,
+//});
+//console.log("My NFTs: \n", myNFTs);
